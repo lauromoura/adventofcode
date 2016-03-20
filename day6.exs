@@ -5,11 +5,9 @@ defmodule Day5 do
     row = IO.read(file, :line)
     if (row != :eof) do
       parsed_row = parse_row(String.strip(row))
-      IO.inspect(parsed_row)
       process_file(file, process_row(parsed_row, current))
     else
-      IO.inspect(Map.values(current))
-      Enum.count(Enum.filter(Map.values(current), &(&1)))
+      Enum.sum(Map.values(current))
     end
   end
 
@@ -23,15 +21,15 @@ defmodule Day5 do
 
   defp process_row([operation, x0, y0, x1, y1], current) do
     func = case operation do
-      :toggle -> fn x -> not x end
-      :"turn on" -> fn _x -> true end
-      :"turn off" -> fn _x -> false end
+      :toggle -> fn x -> x+2 end
+      :"turn on" -> fn x -> x+1 end
+      :"turn off" -> fn x -> max(x-1, 0) end
     end
     coords = for x <- x0..x1, y <- y0..y1 do
       {x, y}
     end
     Enum.reduce coords, current, fn coord, data ->
-      data = Map.put_new(data, coord, false)
+      data = Map.put_new(data, coord, 0)
       Map.update!(data, coord, func)
     end
   end
