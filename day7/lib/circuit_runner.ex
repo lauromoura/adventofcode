@@ -38,39 +38,36 @@ defmodule CircuitRunner do
     Map.update!(circuit, gate, fn _ -> value end)
   end
 
+  defp get_input(circuit, a, b) do
+    {circuit, value_a} = get_gate(circuit, a)
+    circuit = update(circuit, a, value_a)
+    {circuit, value_b} = get_gate(circuit, b)
+    circuit = update(circuit, b, value_b)
+    {circuit, value_a, value_b}
+  end
+
+  # Returns {circuit, value} with the memoized values for each gate and the
+  # value of the current gate
   defp get_gate(circuit, gate) when is_atom(gate) do
-    # IO.inspect(gate)
     operation = Map.get(circuit, gate)
     case operation do
       {:'->', a} ->
         {circuit, value} = get_gate(circuit, a)
         {update(circuit, a, value), value}
       {:AND, a, b} ->
-        {circuit, value_a} = get_gate(circuit, a)
-        circuit = update(circuit, a, value_a)
-        {circuit, value_b} = get_gate(circuit, b)
-        circuit = update(circuit, b, value_b)
+        {circuit, value_a, value_b} = get_input(circuit, a, b)
         value = band(value_a, value_b)
         {circuit, value}
       {:OR, a, b} ->
-        {circuit, value_a} = get_gate(circuit, a)
-        circuit = update(circuit, a, value_a)
-        {circuit, value_b} = get_gate(circuit, b)
-        circuit = update(circuit, b, value_b)
+        {circuit, value_a, value_b} = get_input(circuit, a, b)
         value = bor(value_a, value_b)
         {circuit, value}
       {:RSHIFT, a, b} ->
-        {circuit, value_a} = get_gate(circuit, a)
-        circuit = update(circuit, a, value_a)
-        {circuit, value_b} = get_gate(circuit, b)
-        circuit = update(circuit, b, value_b)
+        {circuit, value_a, value_b} = get_input(circuit, a, b)
         value = bsr(value_a, value_b)
         {circuit, value}
       {:LSHIFT, a, b} ->
-        {circuit, value_a} = get_gate(circuit, a)
-        circuit = update(circuit, a, value_a)
-        {circuit, value_b} = get_gate(circuit, b)
-        circuit = update(circuit, b, value_b)
+        {circuit, value_a, value_b} = get_input(circuit, a, b)
         value = bsl(value_a, value_b)
         {circuit, value}
       {:NOT, a} ->
