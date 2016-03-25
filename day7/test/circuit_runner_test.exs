@@ -24,4 +24,11 @@ defmodule CircuitRunnerTest do
     e = d
     run_test(filename, "e", e)
   end
+
+  test "Actual day7 test part one" do
+    run_test("data/day7.txt", "a", 956)
+  end
+  test "Actual day7 test part two" do
+    run_test("data/day7b.txt", "a", 40149)
+  end
 end
