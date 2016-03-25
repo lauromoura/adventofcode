@@ -1,0 +1,5 @@
+1 -> a
+a LSHIFT 4 -> b
+NOT c -> d
+a OR b -> c
+d -> e

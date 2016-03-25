@@ -5,6 +5,7 @@ defmodule Day7.Mixfile do
     [app: :day7,
      version: "0.0.1",
      elixir: "~> 1.2",
+     escript: [main_module: CircuitRunner],
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps]
