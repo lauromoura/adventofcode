@@ -38,44 +38,37 @@ defmodule CircuitRunner do
     Map.update!(circuit, gate, fn _ -> value end)
   end
 
-  defp get_input(circuit, a, b) do
-    {circuit, value_a} = get_gate(circuit, a)
-    circuit = update(circuit, a, value_a)
-    {circuit, value_b} = get_gate(circuit, b)
-    circuit = update(circuit, b, value_b)
-    {circuit, value_a, value_b}
+  defp get_operand_values(circuit, operands) do
+    Enum.reduce(Enum.reverse(operands), {circuit, []},
+      fn (operand, {circuit, operand_values}) ->
+        {circuit, value} = get_gate(circuit, operand)
+        circuit = update(circuit, operand, value) # Memoize operand value
+        {circuit, [value | operand_values]}
+      end)
   end
 
-  # Returns {circuit, value} with the memoized values for each gate and the
+  defp get_func(opcode) do
+    case opcode do
+      :AND -> &band/2
+      :OR -> &bor/2
+      :RSHIFT -> &bsr/2
+      :LSHIFT -> &bsl/2
+      :'->' -> &(&1)
+      :NOT -> &bnot/1
+    end
+  end
+
+  # Returns {circuit, value} with the memoized values for each operand gate and the
   # value of the current gate
   defp get_gate(circuit, gate) when is_atom(gate) do
-    operation = Map.get(circuit, gate)
-    case operation do
-      {:'->', a} ->
-        {circuit, value} = get_gate(circuit, a)
-        {update(circuit, a, value), value}
-      {:AND, a, b} ->
-        {circuit, value_a, value_b} = get_input(circuit, a, b)
-        value = band(value_a, value_b)
-        {circuit, value}
-      {:OR, a, b} ->
-        {circuit, value_a, value_b} = get_input(circuit, a, b)
-        value = bor(value_a, value_b)
-        {circuit, value}
-      {:RSHIFT, a, b} ->
-        {circuit, value_a, value_b} = get_input(circuit, a, b)
-        value = bsr(value_a, value_b)
-        {circuit, value}
-      {:LSHIFT, a, b} ->
-        {circuit, value_a, value_b} = get_input(circuit, a, b)
-        value = bsl(value_a, value_b)
-        {circuit, value}
-      {:NOT, a} ->
-        {circuit, value} = get_gate(circuit, a)
-        circuit = update(circuit, a, value)
-        {circuit, bnot(value)}
-      value ->
-        {circuit, value}
+    gate_value = Map.get(circuit, gate)
+    if is_integer(gate_value) do
+      {circuit, gate_value} # Got a memoized value
+    else
+      [opcode | operands] = Tuple.to_list(gate_value)
+      {circuit, operand_values} = get_operand_values(circuit, operands)
+      value = apply(get_func(opcode), operand_values)
+      {circuit, value}
     end
   end
   defp get_gate(circuit, gate) when is_integer(gate), do: {circuit, gate}
