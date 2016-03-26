@@ -26,4 +26,27 @@ defmodule CounterTest do
     {code, real} =  Counter.count_file("data/day8.txt", &Counter.count_decode/1)
     assert code - real == 1333
   end
+
+  # Encoded tests.
+  test "Empty string encode" do
+    str = load_file("test/empty.txt")
+    assert {6, 2} == Counter.count_encode(str)
+  end
+  test "Simple string encode" do
+    str = load_file("test/simple.txt")
+    assert {9, 5} == Counter.count_encode(str)
+  end
+  test "Escaped quote encode" do
+    str = load_file("test/escaped_quote.txt")
+    assert {16, 10} == Counter.count_encode(str)
+  end
+  test "Escaped char encode" do
+    str = load_file("test/escaped_char.txt")
+    assert {11, 6} == Counter.count_encode(str)
+  end
+
+  test "Advent of code part 2" do
+    {encoded, code} =  Counter.count_file("data/day8.txt", &Counter.count_encode/1)
+    assert encoded - code == 2046
+  end
 end
