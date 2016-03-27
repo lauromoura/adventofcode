@@ -6,11 +6,20 @@ defmodule Tsp do
   The difference to the tradicional TSP is that the path does not need to go
   back to the starting node.
   """
-  def shortest_distance(data) do
+
+  def calculate_distance(data, func) do
     trajectories = permutations(MapSet.to_list extract_cities(data))
-    Enum.min(Enum.map(trajectories, fn trajectory ->
+    func.(Enum.map(trajectories, fn trajectory ->
       distance(data, trajectory)
     end))
+  end
+
+  def shortest_distance(data) do
+    calculate_distance(data, &Enum.min/1)
+  end
+
+  def longest_distance(data) do
+    calculate_distance(data, &Enum.max/1)
   end
 
   defp extract_cities(cities = %{}) do

@@ -16,6 +16,11 @@ defmodule TspTest do
     assert 207 == Tsp.shortest_distance(graph)
   end
 
+  test "Actual data for part two" do
+    graph = load_graph_from_file("data/day9.txt")
+    assert 804 == Tsp.longest_distance(graph)
+  end
+
   defp load_graph_from_file(filename) do
     regex  = ~r/(\w+) to (\w+) = (\d+)/
     Enum.reduce(File.stream!(filename), %{},
