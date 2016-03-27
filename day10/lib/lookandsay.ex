@@ -1,7 +1,13 @@
 defmodule LookAndSay do
+
+  @moduledoc """
+  Implements the Look-and-Say sequence for strings.
+  """
+
   def say(amount) do
     chars = [head | _tail] = String.to_char_list(amount)
-    say_count(chars, head, 0)
+    chars
+    |> say_count(head, 0)
     |> List.to_string
   end
 
