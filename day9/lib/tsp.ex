@@ -1,12 +1,19 @@
 defmodule Tsp do
+
+  @moduledoc """
+  Provides a naive solution for a TSP-like (Traveling Salesman problem) solver.
+
+  The difference to the tradicional TSP is that the path does not need to go
+  back to the starting node.
+  """
   def shortest_distance(data) do
-    trajectories = permutations(MapSet.to_list cities(data))
+    trajectories = permutations(MapSet.to_list extract_cities(data))
     Enum.min(Enum.map(trajectories, fn trajectory ->
       distance(data, trajectory)
     end))
   end
 
-  defp cities(cities=%{}) do
+  defp extract_cities(cities = %{}) do
     keys = Map.keys(cities)
     Enum.reduce(keys, %MapSet{}, fn {a, b}, acc ->
       acc = MapSet.put(acc, a)
@@ -23,7 +30,7 @@ defmodule Tsp do
     end
   end
 
-  defp distance(graph, trajectory=[a, b | tail]) do
+  defp distance(graph, trajectory = [a, b | tail]) do
     dist = distance_between(graph, a, b)
     dist + distance(graph, [b|tail])
   end
