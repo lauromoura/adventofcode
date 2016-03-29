@@ -1,34 +1,44 @@
 defmodule Password do
 
+  @moduledoc """
+  Password generator for day 11 of advent of code.
+  """
+
   @range ?z - ?a
 
   def valid(password) do
-    password
-    |> has_no_forbidden_letters
-    |> has_increasing_sequence
-    |> has_double_pairs
+    checks = [&has_no_forbidden_letters/1,
+              &has_increasing_sequence/1,
+              &has_double_pairs/1]
+    Enum.all?(Enum.map(checks, &(&1.(password))))
   end
 
   def has_no_forbidden_letters(password) do
     forbidden = [?i, ?o, ?l]
     chars = String.codepoints password
-    is_valid = not Enum.any?(chars, fn <<char::utf8>> ->
+    not Enum.any?(chars, fn <<char::utf8>> ->
       char in forbidden
     end)
-    {password, is_valid}
   end
 
-  def has_increasing_sequence({_,false}), do: {nil, false}
-  def has_increasing_sequence({password, _}) do
-    {password, true}
+  def has_increasing_sequence(password) do
+    increasing_triplet(String.to_char_list(password))
   end
 
-  def has_double_pairs({_, false}), do: false
-  def has_double_pairs({password, _}) do
-    regex = ~r/.*(\w\w).*(\w\w).*/
+  def increasing_triplet(arg = [a, b, c|tail]) do
+    if a + 2 == c and b + 1 == c do
+      true
+    else
+      increasing_triplet([b, c | tail])
+    end
+  end
+  def increasing_triplet(_), do: false
+
+  def has_double_pairs(password) do
+    regex = ~r/.*(\w)(\1).*(\w)(\3).*/
     case Regex.run(regex, password) do
       nil -> false
-      [_row, pair_a, pair_b] when pair_a != pair_b -> false
+      [_row, a1, _, a3, _] when a1 == a3 -> false
       _ -> true
     end
   end

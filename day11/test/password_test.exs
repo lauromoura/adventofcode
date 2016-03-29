@@ -3,16 +3,22 @@ defmodule PasswordTest do
 
   @seed "vzbxkghb"
 
-  test "Valid password: Forbidden letters" do
-    assert not Password.valid("hijklmmn")
+  test "Invalid password: Forbidden letters" do
+    assert not Password.has_no_forbidden_letters("hijklmmn")
+  end
+  test "Invalid password: Increasing sequence" do
+    assert not Password.has_increasing_sequence("abbceffg")
+  end
+  test "Invalid password: Pair of double letters" do
+    assert not Password.has_double_pairs("abceegjk")
   end
 
-  @tag skip: true
-  test "Valid password: Increasing sequence" do
-    assert not Password.valid("abbceffg")
-  end
-  test "Valid password: Pair of double letters" do
-    assert not Password.valid("abbcegjk")
+  test "Valid password" do
+    passwd = "abceezz"
+    assert Password.has_no_forbidden_letters(passwd)
+    assert Password.has_increasing_sequence(passwd)
+    assert Password.has_double_pairs(passwd)
+    assert Password.valid(passwd)
   end
 
   test "Update password" do
@@ -23,8 +29,11 @@ defmodule PasswordTest do
     assert "aaaa" == Password.next("zzzz", :allow_invalid)
   end
 
-  @tag skip: true
   test "Advent of code Day 11 part one" do
-    assert "a" == Password.next(@seed, :enforce)
+    assert "vzbxxyzz" == Password.next(@seed, :enforce)
   end
+  test "Advent of code Day 11 part two" do
+    assert "vzcaabcc" == Password.next("vzbxxyzz", :enforce)
+  end
+
 end
