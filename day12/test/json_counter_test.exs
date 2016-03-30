@@ -29,4 +29,7 @@ defmodule JsonCounterTest do
   test "Advent of code part 1" do
     assert 119433 == JsonCounter.count_file("test/day12.json")
   end
+  test "Advent of code part 2" do
+    assert 68466 == JsonCounter.count_file("test/day12.json", :ignore_red)
+  end
 end
