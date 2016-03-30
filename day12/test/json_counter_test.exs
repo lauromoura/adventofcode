@@ -26,4 +26,7 @@ defmodule JsonCounterTest do
     assert 0 == JsonCounter.count('{}')
   end
 
+  test "Advent of code part 1" do
+    assert 119433 == JsonCounter.count_file("test/day12.json")
+  end
 end

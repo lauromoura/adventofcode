@@ -27,6 +27,7 @@ defmodule Day12.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:credo, "~> 0.3", only: [:dev, :test]}]
+    [{:credo, "~> 0.3", only: [:dev, :test]},
+     {:poison, "~> 2.0"}]
   end
 end
