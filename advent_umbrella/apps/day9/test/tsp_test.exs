@@ -6,6 +6,11 @@ defmodule TspTest do
     assert 15 = Tsp.shortest_distance(graph)
   end
 
+  test "Simple test round trip" do
+    graph = %{{:a, :b} => 10, {:b, :c} => 25, {:a, :c} => 5}
+    assert 40 = Tsp.shortest_distance(graph, :round_trip)
+  end
+
   test "Sample from advent of code" do
     graph = load_graph_from_file("test/sample.txt")
     assert 605 == Tsp.shortest_distance(graph)

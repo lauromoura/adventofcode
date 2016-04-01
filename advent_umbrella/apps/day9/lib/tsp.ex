@@ -7,23 +7,29 @@ defmodule Tsp do
   back to the starting node.
   """
 
-  defp calculate_distance(data, func) do
-    data
+  defp calculate_distance(data, func, option) do
+    trajectories = data
     |> extract_cities
     |> MapSet.to_list
     |> permutations
+
+    if option == :round_trip do
+      trajectories = add_round_trip(trajectories)
+    end
+
+    trajectories
     |> Enum.map(fn trajectory ->
          distance(data, trajectory)
        end)
     |> func.()
   end
 
-  def shortest_distance(data) do
-    calculate_distance(data, &Enum.min/1)
+  def shortest_distance(data, option \\ :no_back) do
+    calculate_distance(data, &Enum.min/1, option)
   end
 
-  def longest_distance(data) do
-    calculate_distance(data, &Enum.max/1)
+  def longest_distance(data, option \\ :no_back) do
+    calculate_distance(data, &Enum.max/1, option)
   end
 
   defp extract_cities(cities = %{}) do
@@ -40,6 +46,12 @@ defmodule Tsp do
   defp permutations(list) do
     for h <- list, t <- permutations(list -- [h]) do
       [h | t]
+    end
+  end
+
+  defp add_round_trip(trajectories) do
+    for x=[h|_] <- trajectories do
+      [h|Enum.reverse(x)]
     end
   end
 
