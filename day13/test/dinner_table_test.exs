@@ -24,4 +24,19 @@ defmodule DinnerTableTest do
     example_data = load_specs("test/example.txt")
     assert 330 = DinnerTable.max_happiness(example_data)
   end
+
+  test "Example test with myself" do
+    example_data = load_specs("test/example.txt") |> DinnerTable.add_myself
+    assert 0 = DinnerTable.max_happiness(example_data)
+  end
+
+  test "Advent of code part 1" do
+    example_data = load_specs("test/day13.txt")
+    assert 664 = DinnerTable.max_happiness(example_data)
+  end
+
+  test "Advent of code part 2 (with myself)" do
+    example_data = load_specs("test/day13.txt") |> DinnerTable.add_myself
+    assert 330 = DinnerTable.max_happiness(example_data)
+  end
 end
