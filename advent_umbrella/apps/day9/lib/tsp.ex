@@ -7,11 +7,15 @@ defmodule Tsp do
   back to the starting node.
   """
 
-  def calculate_distance(data, func) do
-    trajectories = permutations(MapSet.to_list extract_cities(data))
-    func.(Enum.map(trajectories, fn trajectory ->
-      distance(data, trajectory)
-    end))
+  defp calculate_distance(data, func) do
+    data
+    |> extract_cities
+    |> MapSet.to_list
+    |> permutations
+    |> Enum.map(fn trajectory ->
+         distance(data, trajectory)
+       end)
+    |> func.()
   end
 
   def shortest_distance(data) do
