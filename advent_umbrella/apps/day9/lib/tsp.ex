@@ -11,7 +11,7 @@ defmodule Tsp do
     trajectories = data
     |> extract_cities
     |> MapSet.to_list
-    |> permutations
+    |> permutations # FIXME Permutations work for complete graphs. Replace with a walk.
 
     if option == :round_trip do
       trajectories = add_round_trip(trajectories)
@@ -19,6 +19,7 @@ defmodule Tsp do
 
     trajectories
     |> Enum.map(fn trajectory ->
+         # IO.inspect(trajectory)
          distance(data, trajectory)
        end)
     |> func.()
@@ -57,16 +58,20 @@ defmodule Tsp do
 
   defp distance(graph, trajectory = [a, b | tail]) do
     dist = distance_between(graph, a, b)
+    # IO.inspect(dist)
     dist + distance(graph, [b|tail])
   end
   defp distance(graph, [_a | []]), do: 0
 
   defp distance_between(graph, a, b) do
-    key = make_key(a, b)
-    Map.get(graph, key)
+    Map.get(graph, {a, b})
   end
 
   def make_key(a, b) do
     List.to_tuple(Enum.sort [a, b])
+  end
+
+  def add_edge(graph, from, to, distance) do
+    Map.put(graph, {from, to}, distance)
   end
 end

@@ -2,7 +2,7 @@ defmodule TspTest do
   use ExUnit.Case
 
   test "Simple test" do
-    graph = %{{:a, :b} => 10, {:b, :c} => 25, {:a, :c} => 5}
+    graph = %{{:a, :b} => 10, {:b, :c} => 25, {:c, :a} => 5}
     assert 15 = Tsp.shortest_distance(graph)
   end
 
@@ -16,11 +16,13 @@ defmodule TspTest do
     assert 605 == Tsp.shortest_distance(graph)
   end
 
+  @tag skip: true
   test "Actual data for part one" do
     graph = load_graph_from_file("data/day9.txt")
     assert 207 == Tsp.shortest_distance(graph)
   end
 
+  @tag skip: true
   test "Actual data for part two" do
     graph = load_graph_from_file("data/day9.txt")
     assert 804 == Tsp.longest_distance(graph)
@@ -31,8 +33,10 @@ defmodule TspTest do
     Enum.reduce(File.stream!(filename), %{},
       fn line, acc ->
         [_row, start, final, distance] = Regex.run(regex, String.strip line)
-        key = Tsp.make_key(start, final)
-        Map.put(acc, key, String.to_integer distance)
+        distance = String.to_integer distance
+        acc
+        |> Tsp.add_edge(start, final, distance)
+        |> Tsp.add_edge(final, start, distance)
       end)
   end
 end
