@@ -1,7 +1,3 @@
-defmodule Interaction do
-  defstruct name: "Dummy", target: "Joe", delta: 0
-end
-
 defmodule DinnerTable do
 
   def parse(row) do
@@ -11,7 +7,7 @@ defmodule DinnerTable do
     if action == "lose" do
       delta = -delta
     end
-    %Interaction{name: name, target: target, delta: delta}
+    {name, target, delta}
   end
 
   def max_happiness(interactions) do
@@ -27,7 +23,7 @@ defmodule DinnerTable do
     seating
     |> neighbours
     |> Enum.map(fn {guest, left, right} ->
-      Map.get(interactions[{guest, left}], :delta) + Map.get(interactions[{guest, right}], :delta)
+      interactions[{guest, left}] + interactions[{guest, right}]
     end)
     |> Enum.sum
   end
@@ -42,17 +38,16 @@ defmodule DinnerTable do
   end
 
   def get_guests(interactions) do
-    Enum.reduce(Map.values(interactions), %MapSet{},
-      fn %Interaction{name: name}, acc ->
-        MapSet.put(acc, name)
+    Enum.reduce(Map.keys(interactions), %MapSet{},
+      fn {guest, _}, acc ->
+        MapSet.put(acc, guest)
       end)
   end
 
   def add_myself_with(guest, interactions) do
-    interaction = %Interaction{name: guest, target: "myself", delta: 0}
-    interactions = Map.put(interactions, {guest, "myself"}, interaction)
-    interaction = %Interaction{name: "myself", target: guest, delta: 0}
-    Map.put(interactions, {"myself", guest}, interaction)
+    interactions
+    |> Map.put({guest, "myself"}, 0)
+    |> Map.put({"myself", guest}, 0)
   end
 
   def add_myself(interactions) do

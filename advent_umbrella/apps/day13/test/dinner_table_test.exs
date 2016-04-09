@@ -5,19 +5,16 @@ defmodule DinnerTableTest do
     filename
     |> File.stream!([:read])
     |> Enum.reduce(%{}, fn row, acc ->
-      interaction = DinnerTable.parse(row)
-      %Interaction{name: name, target: target} = interaction
-      Map.put(acc, {name, target}, interaction)
+      {name, target, delta} = DinnerTable.parse(row)
+      Map.put(acc, {name, target}, delta)
     end)
   end
 
   test "Parse test" do
-    interaction = DinnerTable.parse("Anna would gain 42 happiness units by sitting next to Apu.")
-    assert %Interaction{name: "Anna", target: "Apu", delta: 42} == interaction
+    assert {"Anna", "Apu", 42} = DinnerTable.parse("Anna would gain 42 happiness units by sitting next to Apu.")
   end
   test "Parse test negative delta" do
-    interaction = DinnerTable.parse("Anna would lose 120 happiness units by sitting next to Apu.")
-    assert %Interaction{name: "Anna", target: "Apu", delta: -120} == interaction
+    assert {"Anna", "Apu", -120} = DinnerTable.parse("Anna would lose 120 happiness units by sitting next to Apu.")
   end
 
   test "Example test" do
