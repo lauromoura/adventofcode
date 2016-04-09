@@ -47,4 +47,17 @@ defmodule DinnerTable do
         MapSet.put(acc, name)
       end)
   end
+
+  def add_myself_with(guest, interactions) do
+    interaction = %Interaction{name: guest, target: "myself", delta: 0}
+    interactions = Map.put(interactions, {guest, "myself"}, interaction)
+    interaction = %Interaction{name: "myself", target: guest, delta: 0}
+    Map.put(interactions, {"myself", guest}, interaction)
+  end
+
+  def add_myself(interactions) do
+    interactions
+    |> get_guests
+    |> Enum.reduce(interactions, &add_myself_with/2)
+  end
 end
