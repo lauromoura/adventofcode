@@ -12,9 +12,42 @@ defmodule Reindeer do
   def winner(reindeers = %{}, duration) do
     reindeers
     |> Enum.max_by(fn {name, {speed, run_time, rest_time}} ->
-        {distance(speed, run_time, rest_time, duration), name}
-       end)
+                     {distance(speed, run_time, rest_time, duration), name}
+                   end)
     |> elem(0)
+  end
+
+  def points_race(reindeers = %{}, duration) do
+    score = Enum.reduce(reindeers, %{}, fn {k, _v}, acc ->
+      Map.put(acc, k, 0)
+    end)
+    do_points_race(reindeers, score, duration)
+  end
+  defp do_points_race(_reindeers = %{}, score = %{}, 0), do: score
+  defp do_points_race(reindeers = %{}, score = %{}, duration) when duration > 0 do
+    distances = Enum.map(reindeers,
+                         fn {k, _} ->
+                           {k, run(reindeers, k, duration)}
+                         end)
+    updated_score = Enum.reduce(round_winners(distances),
+                                score,
+                                fn player, new_score ->
+                                  Map.update!(new_score, player, &(&1 + 1))
+                                end)
+    do_points_race(reindeers, updated_score, duration - 1)
+  end
+
+  defp round_winners(distances) do
+    {_, winning_distance} = Enum.max_by(distances, fn {_k, v} -> v end)
+    distances
+    |> Enum.filter(fn {_k, v} -> v == winning_distance end)
+    |> Keyword.keys
+  end
+
+  def points_winner(results = %{}) do
+    results
+    |> Enum.max_by(&(elem(&1, 1)))
+    |> elem(1)
   end
 
   def parse(row) do

@@ -51,4 +51,22 @@ defmodule ReindeerTest do
     winner = Reindeer.winner(reindeers, 2503)
     assert 2660 == Reindeer.run(reindeers, winner, 2503)
   end
+
+  test "Points winner basic example" do
+    results = Reindeer.points_race(@reindeers, 1)
+    assert 1 == Reindeer.points_winner(results)
+    results = Reindeer.points_race(@reindeers, 1000)
+    assert 689 == Reindeer.points_winner(results)
+  end
+
+  test "Points race basic example" do
+    assert %{:Comet => 0, :Dancer => 1} = Reindeer.points_race(@reindeers, 1)
+    assert %{:Comet => 312, :Dancer => 689} = Reindeer.points_race(@reindeers, 1000)
+  end
+
+  test "Part two test" do
+    reindeers = load_specs("test/day14.txt")
+    results = Reindeer.points_race(reindeers, 2503)
+    assert 1256 == Reindeer.points_winner(results)
+  end
 end
