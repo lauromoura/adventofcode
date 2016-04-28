@@ -11,7 +11,7 @@ defmodule CookieTest do
   end
 
   test "Basic ingredient test" do
-    ingredient = %Ingredient{capacity: 1, durability: 2, flavor: 3, texture: 4 }
+    _ingredient = %Ingredient{capacity: 1, durability: 2, flavor: 3, texture: 4 }
   end
 
   test "Basic bake" do
@@ -23,6 +23,11 @@ defmodule CookieTest do
 
   test "Advent of code part 1" do
     ingredients = load_specs("test/day15.txt")
-    assert 0 == Cookie.perfect(ingredients)
+    assert 13882464 == Cookie.perfect(ingredients)
+  end
+
+  test "Advent of code part 2" do
+    ingredients = load_specs("test/day15.txt")
+    assert 11171160 == Cookie.perfect(ingredients, [:meal])
   end
 end
