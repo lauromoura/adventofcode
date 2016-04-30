@@ -7,12 +7,23 @@ defmodule Eggnog do
     (for y <- combination(n - 1, xs), do: [x|y]) ++ combination(n, xs)
   end
 
-  def options(quantity, buckets) do
-    Enum.sum (for seq_size <- 1..(Enum.count buckets) do
+  defp options(quantity, buckets) do
+    for seq_size <- 1..(Enum.count buckets) do
       seq_size
       |> combination(buckets)
       |> Enum.filter(fn x -> Enum.sum(x) == quantity end)
       |> Enum.count
-    end)
+    end
+  end
+
+  def how_many_options?(quantity, buckets) do
+    Enum.sum options(quantity, buckets)
+  end
+
+  def how_many_with_minimum_buckets?(quantity, buckets) do
+    quantity
+    |> options(buckets)
+    |> IO.inspect
+    |> Enum.find(fn x -> x != 0 end)
   end
 end
