@@ -3,27 +3,38 @@ defmodule Conway do
   @living_cell ?#
   @dead_cell ?.
 
-  def evolve(grid, 0) do
-    # print(grid)
+  def evolve(grid, n, opts \\ [])
+
+  def evolve(grid, 0, _) do
     grid
   end
-  def evolve(grid, n) do
-    evolve(iterate(grid), n-1)
+  def evolve(grid, n, opts) do
+    evolve(iterate(grid, opts), n-1, opts)
   end
 
-  def iterate(grid) do
-    # print(grid)
-    Enum.reduce(grid, %{}, fn {coord, v}, acc ->
-      Map.put(acc, coord, next_cell_value(coord, v, grid))
+  def iterate(grid, opts) do
+    skip = corners(grid)
+    Enum.reduce(grid, grid, fn {coord, v}, acc ->
+      if :stuck_corners in opts and coord in skip do
+        Map.put(acc, coord, true)
+      else
+        Map.put(acc, coord, next_cell_value(coord, v, grid))
+      end
     end)
   end
 
-  def next_cell_value(coord={r,c}, v, grid) do
+  def next_cell_value(coord, v, grid) do
     neighbours = living_neighbours(coord, grid)
     case v do
       true -> neighbours >= 2 and neighbours <= 3
       false -> neighbours == 3
     end
+  end
+
+  def light_up_corners(grid) do
+    grid
+    |> corners
+    |> Enum.reduce(grid, fn coords, acc -> Map.update!(acc, coords, fn _ -> true end) end)
   end
 
   def how_many_living?(grid) do
@@ -74,6 +85,14 @@ defmodule Conway do
     |> Enum.unzip
 
     {Enum.max(rows), Enum.max(cols)}
+  end
+
+  def corners(grid) do
+    {rows, cols} = dimensions(grid)
+
+    for row <- [0,rows], col <- [0, cols] do
+      {row, col}
+    end
   end
 
 end

@@ -28,12 +28,29 @@ defmodule ConwayTest do
     assert 4 == Conway.how_many_living?(grid)
   end
 
-  @tag skip: false
+  test "sample part 2" do
+    grid = "test/sample.txt"
+    |> load_specs
+    |> Conway.light_up_corners
+    |> Conway.evolve(5, [:stuck_corners ])
+
+    assert 17 == Conway.how_many_living?(grid)
+  end
+
   test "part 1" do
     grid = "test/day18.txt"
     |> load_specs
     |> Conway.evolve(100)
 
     assert 821 == Conway.how_many_living?(grid)
+  end
+
+  test "part 2" do
+    grid = "test/day18.txt"
+    |> load_specs
+    |> Conway.light_up_corners
+    |> Conway.evolve(100, [:stuck_corners])
+
+    assert 886 = Conway.how_many_living?(grid)
   end
 end
