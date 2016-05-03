@@ -18,7 +18,7 @@ defmodule Day18.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger]]
+    [applications: [:logger], mod: {Memoize.ResultTable, [] }]
   end
 
   # Dependencies can be Hex packages:
@@ -35,6 +35,6 @@ defmodule Day18.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [{:exprof, "~> 0.2.0"}]
   end
 end

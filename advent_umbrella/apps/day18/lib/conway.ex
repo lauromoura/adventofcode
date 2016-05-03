@@ -1,5 +1,7 @@
 defmodule Conway do
 
+  require Memoize
+
   @living_cell ?#
   @dead_cell ?.
 
@@ -58,7 +60,7 @@ defmodule Conway do
     |> Enum.count
   end
 
-  def neighbours({r, c}) do
+  Memoize.defmem neighbours({r, c}) do
     for r_idx <- (r-1)..(r+1), c_idx <- (c-1)..(c+1),
         r_idx >= 0, c_idx >= 0, (r_idx != r or c_idx != c) do
       {r_idx, c_idx}
