@@ -2,15 +2,16 @@ defmodule Day01 do
   def frequency(changes) do
     changes
     |> parse_changes
-    |> Enum.sum
+    |> Enum.sum()
   end
 
   def repeated(changes) do
     changes
     |> parse_changes
-    |> Stream.cycle
-    |> Enum.reduce_while({0, MapSet.new([0])}, fn f, {s, freqs} -> 
+    |> Stream.cycle()
+    |> Enum.reduce_while({0, MapSet.new([0])}, fn f, {s, freqs} ->
       new = f + s
+
       if MapSet.member?(freqs, new) do
         {:halt, new}
       else

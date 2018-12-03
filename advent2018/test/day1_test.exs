@@ -9,10 +9,12 @@ defmodule Day01Test do
   end
 
   test "question 1" do
-    freq = "test/day01_1_input.txt"
-           |> File.stream!([], :line)
-           |> Stream.map(&String.trim/1)
-           |> Day01.frequency
+    freq =
+      "test/day01_1_input.txt"
+      |> File.stream!([], :line)
+      |> Stream.map(&String.trim/1)
+      |> Day01.frequency()
+
     assert freq == 518
   end
 
@@ -22,10 +24,12 @@ defmodule Day01Test do
   end
 
   test "question 2" do
-    freq = "test/day01_1_input.txt"
-           |> File.stream!([], :line)
-           |> Stream.map(&String.trim/1)
-           |> Day01.repeated
+    freq =
+      "test/day01_1_input.txt"
+      |> File.stream!([], :line)
+      |> Stream.map(&String.trim/1)
+      |> Day01.repeated()
+
     assert freq == 72889
   end
 end
