@@ -24,4 +24,28 @@ defmodule Day02Test do
 
     assert checksum == 6944
   end
+
+  test "basic question 2" do
+    boxes = [
+      "abcde",
+      "fghij",
+      "klmno",
+      "pqrst",
+      "fguij",
+      "axcye",
+      "wvxyz"
+    ]
+
+    assert Day02.common_letters(boxes) == "fgij"
+  end
+
+  test "question 2" do
+    common =
+      "test/day02_1_input.txt"
+      |> File.stream!([], :line)
+      |> Stream.map(&String.trim/1)
+      |> Day02.common_letters()
+
+    assert common == "srijafjzloguvlntqmphenbkd"
+  end
 end

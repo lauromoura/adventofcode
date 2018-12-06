@@ -15,4 +15,21 @@ defmodule Day02 do
     |> Map.values()
     |> MapSet.new()
   end
+
+  def common_letters(boxes) do
+    len = String.length(Enum.at(boxes, 0))
+    boxes = Enum.map(boxes, &String.to_charlist/1)
+
+    # Simple, brute force approach as the number of ids is 250
+    for x <- boxes, y <- boxes do
+      Enum.zip(x, y)
+    end
+    |> Enum.filter(fn pair ->
+      Enum.count(pair, fn {x, y} -> x == y end) == len - 1
+    end)
+    |> hd()
+    |> Enum.filter(fn {a, b} -> a == b end)
+    |> Enum.map(fn {a, _} -> a end)
+    |> List.to_string()
+  end
 end
