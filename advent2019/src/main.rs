@@ -1,14 +1,19 @@
-mod day_01 {
+mod helpers {
     use std::fs::File;
     use std::io::{BufRead, BufReader};
 
-    pub fn first() {
-        let filename = "day01-01.txt";
+    pub fn read_lines(filename: &str) -> std::io::Lines<std::io::BufReader<std::fs::File>> {
         let file = File::open(filename).unwrap();
         let reader = BufReader::new(file);
+        reader.lines()
+    }
+}
 
-        let fuel_for_modules: i32 = reader
-            .lines()
+mod day_01 {
+    pub fn first() {
+        let filename = "day01-01.txt";
+
+        let fuel_for_modules: i32 = super::helpers::read_lines(filename)
             .map(|s| s.unwrap().parse::<i32>().unwrap())
             .map(|i| weigth(i))
             .sum();
@@ -17,11 +22,8 @@ mod day_01 {
 
     pub fn second() {
         let filename = "day01-01.txt";
-        let file = File::open(filename).unwrap();
-        let reader = BufReader::new(file);
 
-        let fuel_for_modules: i32 = reader
-            .lines()
+        let fuel_for_modules: i32 = super::helpers::read_lines(filename)
             .map(|s| s.unwrap().parse::<i32>().unwrap())
             .map(|i| total_fuel(i))
             .sum();
