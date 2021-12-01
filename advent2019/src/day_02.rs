@@ -11,7 +11,7 @@ fn do_op(memory: &mut Vec<i32>, index: &mut usize) {
         2 => memory[lhs] * memory[rhs],
         _ => panic!("Invalid operation"),
     };
-    *index = *index + 4;
+    *index += 4;
 }
 
 pub fn first() {
@@ -20,7 +20,7 @@ pub fn first() {
     let contents = fs::read_to_string(filename).unwrap();
     let mut memory: Vec<i32> = contents
         .trim()
-        .split(",")
+        .split(',')
         .map(|i| i.parse::<i32>().unwrap())
         .collect();
 

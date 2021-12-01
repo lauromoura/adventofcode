@@ -3,7 +3,7 @@ pub fn first() {
 
     let fuel_for_modules: i32 = super::helpers::read_lines(filename)
         .map(|s| s.unwrap().parse::<i32>().unwrap())
-        .map(|i| weigth(i))
+        .map(weigth)
         .sum();
     println!("Day 1 - 1: {}", fuel_for_modules);
 }
@@ -13,7 +13,7 @@ pub fn second() {
 
     let fuel_for_modules: i32 = super::helpers::read_lines(filename)
         .map(|s| s.unwrap().parse::<i32>().unwrap())
-        .map(|i| total_fuel(i))
+        .map(total_fuel)
         .sum();
     println!("Day 1 - 2: {}", fuel_for_modules);
 }
