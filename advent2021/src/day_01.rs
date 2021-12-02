@@ -20,5 +20,5 @@ pub fn second() {
         (acc + ((previous < x) as i32), x)
     });
 
-    println!("Day 02 part 2: {}", acc);
+    println!("Day 01 part 2: {}", acc);
 }
