@@ -4,6 +4,7 @@ mod day_03;
 mod day_04;
 mod day_05;
 mod day_06;
+mod day_07;
 mod helpers;
 
 use std::env;
@@ -36,5 +37,9 @@ fn main() {
     if all || args.contains(&"-6".to_owned()) {
         day_06::first();
         day_06::second();
+    }
+    if all || args.contains(&"-7".to_owned()) {
+        day_07::first();
+        day_07::second();
     }
 }
